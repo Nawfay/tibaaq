@@ -1,5 +1,5 @@
 import os
-from core.groq_client import client
+from core.config import client
 
 def transcribe_audio(file_path: str) -> str:
 

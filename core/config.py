@@ -1,5 +1,6 @@
 
 from dotenv import load_dotenv
+from groq import Groq
 import os
 
 load_dotenv()
@@ -15,3 +16,5 @@ TANDOOR_API_TOKEN = os.getenv("TANDOOR_API_TOKEN")
 MEALIE_API_URL = os.getenv("MEALIE_API_URL")
 MEALIE_API_TOKEN = os.getenv("MEALIE_API_TOKEN")
 
+
+client = Groq(api_key=GROQ_API_KEY)

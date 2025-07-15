@@ -16,7 +16,7 @@ def push_recipe_to_tandoor(recipe_json: str | dict) -> dict:
         "Content-Type": "application/json"
     }
 
-    response = requests.post(TANDOOR_API_URL, headers=headers, json=recipe_json)
+    response = requests.post(f"{TANDOOR_API_URL.rstrip('/')}/recipe/", headers=headers, json=recipe_json)
 
     if response.status_code == 201:
         print("[Tandoor] Recipe created successfully.")
@@ -26,6 +26,28 @@ def push_recipe_to_tandoor(recipe_json: str | dict) -> dict:
         response.raise_for_status()
 
 
+def upload_tandoor_image(recipe_id: str, image_path: str):
+
+    url = f"{TANDOOR_API_URL.rstrip('/')}/recipe/{recipe_id}/image/"
+    headers = {
+        "Authorization": f"Bearer {TANDOOR_API_TOKEN}"
+    }
+
+    if not os.path.exists(image_path):
+        print(f"[Tandoor] Image file not found: {image_path}")
+        return
+
+    with open(image_path, "rb") as f:
+        files = {
+            "image": (os.path.basename(image_path), f, "image/jpeg")
+        }
+        response = requests.put(url, headers=headers, files=files)
+
+    if response.status_code in (200, 201):
+        print(f"[Tandoor] Thumbnail uploaded successfully to recipe {recipe_id}")
+    else:
+        print(f"[Tandoor] Image upload failed: {response.status_code} - {response.text}")
+        response.raise_for_status()
 def generate_tandoor_prompt(description: str, transcript: str, source_url: str = "") -> str:
     return f"""
 You are a recipe extraction AI.

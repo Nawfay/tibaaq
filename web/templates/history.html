@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Download History</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-base-200 p-6">
+
+  <div class="max-w-5xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-bold">Download History</h1>
+      <a href="{{ url_for('index') }}" class="btn btn-outline btn-sm">← Back to Submit</a>
+    </div>
+
+    {% if current %}
+      <div class="alert alert-info shadow-lg">
+        <span>
+          <strong>Currently Downloading:</strong> {{ current.url }}
+        </span>
+      </div>
+    {% endif %}
+
+    {% if tasks %}
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>URL</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+              <tr>
+                <td class="text-sm text-gray-500">{{ task.id[:8] }}…</td>
+                <td><a href="{{ task.url }}" class="link link-hover link-primary" target="_blank">{{ task.url }}</a></td>
+                <td><span class="badge badge-outline">{{ task.status }}</span></td>
+                <td>
+                  {% if task.status == 'done' %}
+                    <span class="text-success">✅</span>
+                  {% elif task.status == 'failed' %}
+                    <span class="text-error">❌</span>
+                  {% elif task.status == 'downloading' %}
+                    <span class="loading loading-dots loading-sm"></span>
+                  {% else %}
+                    <span class="text-warning">⏳</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-warning shadow-lg">
+        <span>No tasks found.</span>
+      </div>
+    {% endif %}
+  </div>
+
+</body>
+</html>

@@ -11,10 +11,15 @@ def download_video_and_metadata(url: str, id: str) -> tuple[str, dict]:
         'outtmpl': output_path,
         'quiet': True,
         'format': 'bestaudio/best',
+        "writethumbnail": True,
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'm4a',
             'preferredquality': '128',
+        },
+        {
+            "key": "FFmpegThumbnailsConvertor",
+            "format": "jpg"
         }],
     }
 

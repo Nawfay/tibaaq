@@ -4,7 +4,7 @@ import json
 import time
 
 from core.external.tandoor import generate_tandoor_prompt
-from core.groq_client import client
+from core.config import client
 
 
 
@@ -25,7 +25,7 @@ def generate_recipe_json(description: str, transcript: str, source_url: str, max
 
             raw = response.choices[0].message.content.strip()
 
-            print(f"[Groq] Raw JSON: {raw}")
+            # print(f"[Groq] Raw JSON: {raw}")
             parsed = json.loads(raw)
             return parsed  # ✅ Valid structured JSON returned
 
