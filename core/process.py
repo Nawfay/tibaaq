@@ -5,6 +5,7 @@ import time
 
 from core.external.tandoor import generate_tandoor_prompt
 from core.config import client
+from core.utils import Colors
 
 
 
@@ -13,11 +14,11 @@ def generate_recipe_json(description: str, transcript: str, source_url: str, max
 
     for attempt in range(1, max_attempts + 1):
         try:
-            print(f"[Groq] Attempt {attempt} to generate recipe JSON...")
+            print(f"{Colors.GROQ} Attempt {attempt} to generate recipe JSON...")
             response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
+                # model="llama-3.3-70b-versatile", # Works pretty well and gives short-sweet answers (0.5)
+                model="openai/gpt-oss-120b", # this is very ChatGPT like , very descriptive (0.15)
                 messages=[{"role": "user", "content": prompt}],
-                # max_completion_tokens=1024,
                 response_format={"type": "json_object"},
                 stream=False,
                 temperature=1,
@@ -25,17 +26,17 @@ def generate_recipe_json(description: str, transcript: str, source_url: str, max
 
             raw = response.choices[0].message.content.strip()
 
-            # print(f"[Groq] Raw JSON: {raw}")
+            # print(f"{Colors.GROQ} Raw JSON: {raw}")
             parsed = json.loads(raw)
             return parsed  # ✅ Valid structured JSON returned
 
         except json.JSONDecodeError as e:
-            print(f"[Groq] JSON decode failed: {e}")
+            print(f"{Colors.GROQ} JSON decode failed: {e}")
         except Exception as e:
-            print(f"[Groq] Error: {e}")
+            print(f"{Colors.GROQ} Error: {e}")
 
         if attempt < max_attempts:
-            print("[Groq] Retrying in 1s...")
+            print(f"{Colors.GROQ} Retrying in 1s...")
             time.sleep(1)
 
     raise RuntimeError("Failed to generate valid recipe JSON after retries.")

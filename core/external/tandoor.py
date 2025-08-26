@@ -3,7 +3,7 @@ import os
 import json
 
 from core.config import TANDOOR_API_URL, TANDOOR_API_TOKEN
-
+from core.utils import Colors
 
 
 def push_recipe_to_tandoor(recipe_json: str | dict) -> dict:
@@ -17,12 +17,13 @@ def push_recipe_to_tandoor(recipe_json: str | dict) -> dict:
     }
 
     response = requests.post(f"{TANDOOR_API_URL.rstrip('/')}/recipe/", headers=headers, json=recipe_json)
+    print(f"{Colors.TANDOOR} Creating recipe on Tandoor...")
 
     if response.status_code == 201:
-        print("[Tandoor] Recipe created successfully.")
+        print(f"{Colors.TANDOOR} Recipe created successfully.")
         return response.json()
     else:
-        print(f"[Tandoor] Error: {response.status_code} - {response.text}")
+        print(f"{Colors.TANDOOR} Error: {response.status_code} - {response.text}")
         response.raise_for_status()
 
 
@@ -34,7 +35,7 @@ def upload_tandoor_image(recipe_id: str, image_path: str):
     }
 
     if not os.path.exists(image_path):
-        print(f"[Tandoor] Image file not found: {image_path}")
+        print(f"{Colors.TANDOOR} Image file not found: {image_path}")
         return
 
     with open(image_path, "rb") as f:
@@ -44,10 +45,12 @@ def upload_tandoor_image(recipe_id: str, image_path: str):
         response = requests.put(url, headers=headers, files=files)
 
     if response.status_code in (200, 201):
-        print(f"[Tandoor] Thumbnail uploaded successfully to recipe {recipe_id}")
+        print(f"{Colors.TANDOOR} Thumbnail uploaded successfully to recipe {recipe_id}")
     else:
-        print(f"[Tandoor] Image upload failed: {response.status_code} - {response.text}")
+        print(f"{Colors.TANDOOR} Image upload failed: {response.status_code} - {response.text}")
         response.raise_for_status()
+
+
 def generate_tandoor_prompt(description: str, transcript: str, source_url: str = "") -> str:
     return f"""
 You are a recipe extraction AI.

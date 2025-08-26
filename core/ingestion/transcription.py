@@ -1,12 +1,13 @@
 import os
 from core.config import client
+from core.utils import Colors
 
 def transcribe_audio(file_path: str) -> str:
 
     if not os.path.exists(file_path):
-        raise FileNotFoundError(f"[Transcription] File not found: {file_path}")
+        raise FileNotFoundError(f"{Colors.TRANSCRIBE} File not found: {file_path}")
 
-    print(f"[Transcription] Sending file to Groq Whisper: {file_path}")
+    print(f"{Colors.TRANSCRIBE} Sending file to Groq Whisper: {file_path}")
 
     with open(file_path, "rb") as audio_file:
         transcription = client.audio.transcriptions.create(
@@ -14,5 +15,5 @@ def transcribe_audio(file_path: str) -> str:
             model="whisper-large-v3-turbo",  # or "whisper-large-v3-turbo" if supported
         )
 
-    print(f"[Transcribe] Transcription complete.")
+    print(f"{Colors.TRANSCRIBE} Transcription complete.")
     return transcription.text
