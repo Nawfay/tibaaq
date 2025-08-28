@@ -8,6 +8,8 @@ load_dotenv()
 # Groq
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+QUEUE_CHECK_TIME = os.getenv("QUEUE_CHECK_TIME")
+
 # Tandoor
 TANDOOR_API_URL = os.getenv("TANDOOR_API_URL")
 TANDOOR_API_TOKEN = os.getenv("TANDOOR_API_TOKEN")

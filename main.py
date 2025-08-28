@@ -9,9 +9,8 @@ from core.queue.queue import enqueue_download
 from core.worker import worker_loop
 from web.web import app
 from core.utils import Colors
-from core.config import INSTAGRAM_ENABLED, DISCORD_ENABLED
+from core.config import INSTAGRAM_ENABLED, DISCORD_ENABLED, QUEUE_CHECK_TIME
 
-from insta.insta_improved import start_reel_watcher  # Using improved rate-limit aware watcher
 from discord_bot.bot import start_discord_bot  # Import Discord bot
 
 
@@ -31,20 +30,12 @@ if __name__ == "__main__":
 
         def start_worker():
             try:
-                worker_loop()
+                worker_loop(int(QUEUE_CHECK_TIME))
             except Exception as e:
                 print(f"{Colors.WORKER} Error: {e}")
 
-        def start_watcher():
-            try:
-                start_reel_watcher()
-            except Exception as e:
-                print(f"{Colors.WATCHER} Error: {e}")
-
         
         threading.Thread(target=start_worker, daemon=True).start()
-        if INSTAGRAM_ENABLED:
-            threading.Thread(target=start_watcher, daemon=True).start()
         if DISCORD_ENABLED:
             threading.Thread(target=start_discord_bot, daemon=True).start()
 

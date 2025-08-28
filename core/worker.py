@@ -37,7 +37,7 @@ def process_task(task: DownloadTask, session):
 
         # Step 4: Push to Tandoor
         result = push_recipe_to_tandoor(recipe_json)
-        # print(result)
+        print(result)
         print(file_path[:-4] + ".jpg")
         upload_tandoor_image(result["id"], file_path[:-4] + ".jpg")
         
